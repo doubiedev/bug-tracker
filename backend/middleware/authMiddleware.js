@@ -26,4 +26,20 @@ const protect = asyncHandler(async (req, res, next) => {
     }
 });
 
-export { protect };
+const checkRole = (roles) => {
+    return asyncHandler(async (req, res, next) => {
+        if (!req.user || !req.user.role) {
+            res.status(401);
+            throw new Error('Not authorized');
+        }
+
+        if (!roles.includes(req.user.role)) {
+            res.status(403); // Forbidden
+            throw new Error('Access denied: You do not have the required role');
+        }
+
+        next();
+    });
+};
+
+export { protect, checkRole };
