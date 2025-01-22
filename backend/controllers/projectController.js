@@ -1,6 +1,40 @@
 import asyncHandler from 'express-async-handler';
 import Project from '../models/projectModel.js';
 
+// @desc    Create project
+// @route   POST /api/projects
+// @access  Private
+const createProject = asyncHandler(async (req, res) => {
+    const { name, description, createdBy, teamMembers } = req.body;
+
+    const projectExists = await Project.findOne({ name });
+
+    if (projectExists) {
+        res.status(400);
+        throw new Error('Project already exists');
+    }
+
+    const project = await Project.create({
+        name,
+        description,
+        createdBy,
+        teamMembers,
+    });
+
+    if (project) {
+        res.status(201).json({
+            _id: project._id,
+            name: project.name,
+            description: project.description,
+            createdBy: project.createdBy,
+            teamMembers: project.teamMembers,
+        });
+    } else {
+        res.status(400);
+        throw new Error('Invalid project data');
+    }
+});
+
 // @desc    Get all projects
 // @route   GET /api/projects
 // @access  Private
@@ -42,40 +76,6 @@ const getProject = asyncHandler(async (req, res) => {
     res.status(200).json(project);
 });
 
-// @desc    Create project
-// @route   POST /api/projects
-// @access  Private
-const createProject = asyncHandler(async (req, res) => {
-    const { name, description, createdBy, teamMembers } = req.body;
-
-    const projectExists = await Project.findOne({ name });
-
-    if (projectExists) {
-        res.status(400);
-        throw new Error('Project already exists');
-    }
-
-    const project = await Project.create({
-        name,
-        description,
-        createdBy,
-        teamMembers,
-    });
-
-    if (project) {
-        res.status(201).json({
-            _id: project._id,
-            name: project.name,
-            description: project.description,
-            createdBy: project.createdBy,
-            teamMembers: project.teamMembers,
-        });
-    } else {
-        res.status(400);
-        throw new Error('Invalid project data');
-    }
-});
-
 // @desc    Update project
 // @route   PUT /api/projects/:id
 // @access  Private
@@ -85,15 +85,8 @@ const updateProject = asyncHandler(async (req, res) => {
     if (project) {
         project.name = req.body.name || project.name;
         project.description = req.body.description || project.description;
-
         project.createdBy = req.body.createdBy || project.createdBy;
-
-        if (Array.isArray(req.body.teamMembers)) {
-            project.teamMembers = req.body.teamMembers;
-        } else {
-            res.status(400);
-            throw new Error('Invalid teamMembers format. Expected an array of user IDs.');
-        }
+        project.teamMembers = req.body.teamMembers || project.teamMembers;
 
         await project.save();
 
@@ -126,9 +119,9 @@ const deleteProject = asyncHandler(async (req, res) => {
 });
 
 export {
+    createProject,
     getAllProjects,
     getProject,
-    createProject,
     updateProject,
     deleteProject,
 };
