@@ -17,6 +17,7 @@ import LoginScreen from './screens/LoginScreen.jsx';
 import RegisterScreen from './screens/RegisterScreen.jsx';
 import ProfileScreen from './screens/ProfileScreen.jsx';
 import ProjectsScreen from './screens/ProjectsScreen.jsx';
+import CreateProjectScreen from './screens/CreateProjectsScreen.jsx';
 import TeamsScreen from './screens/TeamsScreen.jsx';
 
 const router = createBrowserRouter(
@@ -29,6 +30,7 @@ const router = createBrowserRouter(
                 <Route index={true} path='/' element={<HomeScreen />} />
                 <Route path='/profile' element={<ProfileScreen />} />
                 <Route path='/projects' element={<ProjectsScreen />} />
+                <Route path='/projects/create' element={<CreateProjectScreen />} />
                 <Route path='/teams' element={<TeamsScreen />} />
             </Route>
         </Route>
