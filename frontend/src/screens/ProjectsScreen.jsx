@@ -1,38 +1,93 @@
 import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useFetchProjectsQuery } from '../slices/projectsApiSlice';
+import { Table, Dropdown, Button } from "react-bootstrap";
+import { useSelector } from "react-redux";
+import { useGetAllProjectsQuery, useDeleteProjectMutation } from "../slices/projectsApiSlice";
+import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
 const ProjectsScreen = () => {
-    const dispatch = useDispatch();
+    const { data, error, isLoading, refetch } = useGetAllProjectsQuery();
+    const [deleteProject] = useDeleteProjectMutation();
+    const { userInfo } = useSelector((state) => state.auth);
     const navigate = useNavigate();
 
-    const { projects, loading, error } = useSelector((state) => state.projects);
-
-    const { refetch } = useFetchProjectsQuery();
-
     useEffect(() => {
-        refetch(); // Refetch projects when component loads
-    }, [dispatch, refetch]);
+        refetch();
+    }, [refetch]);
 
-    if (loading) return <div>Loading...</div>;
-    if (error) return <div>Error: {error}</div>;
+    const truncateText = (text, wordLimit = 10) => {
+        const words = text.split(" ");
+        if (words.length > wordLimit) {
+            return words.slice(0, wordLimit).join(" ") + "...";
+        }
+        return text;
+    };
+
+    const handleEdit = (id) => {
+        navigate(`/projects/edit/${id}`);
+    };
+
+    const handleDelete = async (id) => {
+        if (window.confirm("Are you sure you want to delete this project?")) {
+            try {
+                await deleteProject(id).unwrap();
+                toast.success("Project deleted successfully!");
+                refetch(); // Refresh project list
+            } catch (err) {
+                toast.error(err?.data?.message || "Error deleting project");
+            }
+        }
+    };
 
     return (
-        <div>
-            <div className="d-flex justify-content-between align-items-center mb-3">
-                <h3>Projects</h3>
-                <button className="btn btn-primary" onClick={() => navigate("/projects/create")}>
-                    + Create New Project
-                </button>
-            </div>
-                <ul>
-                    {projects.map((project) => (
-                        <li key={project._id}>{project.name}</li>
-                    ))}
-                </ul>
+        <div className="container">
+            <h2 className="mb-4">Projects</h2>
+            {isLoading ? (
+                <p>Loading...</p>
+            ) : error ? (
+                <p className="text-danger">{error?.data?.message || "Error loading projects"}</p>
+            ) : (
+                <Table striped bordered hover responsive>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Description</th>
+                            <th>Created By</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {data.projects.map((project) => (
+                            <tr key={project._id}>
+                                <td>{project.name}</td>
+                                <td>{truncateText(project.description)}</td>
+                                <td>{project.createdBy?.name || "Unknown"}</td>
+                                <td>
+                                    <Dropdown>
+                                        <Dropdown.Toggle variant="secondary" size="sm">
+                                            Actions
+                                        </Dropdown.Toggle>
+                                        <Dropdown.Menu>
+                                            <Dropdown.Item onClick={() => handleEdit(project._id)}>
+                                                Edit
+                                            </Dropdown.Item>
+                                            <Dropdown.Item onClick={() => handleDelete(project._id)}>
+                                                Delete
+                                            </Dropdown.Item>
+                                        </Dropdown.Menu>
+                                    </Dropdown>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </Table>
+            )}
+            <Button variant="primary" onClick={() => navigate("/projects/create")}>
+                Create New Project
+            </Button>
         </div>
     );
 };
 
 export default ProjectsScreen;
+

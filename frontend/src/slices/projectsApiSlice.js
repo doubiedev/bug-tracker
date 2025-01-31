@@ -5,7 +5,14 @@ const PROJECTS_URL = '/api/projects';
 
 export const projectsApiSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
-        fetchProjects: builder.query({
+        createProject: builder.mutation({
+            query: (data) => ({
+                url: PROJECTS_URL,
+                method: "POST",
+                body: data,
+            }),
+        }),
+        getAllProjects: builder.query({
             query: () => `${PROJECTS_URL}`,
             async onQueryStarted(_, { dispatch, queryFulfilled }) {
                 try {
@@ -20,7 +27,7 @@ export const projectsApiSlice = apiSlice.injectEndpoints({
             },
             providesTags: ['Project'],
         }),
-        fetchProjectById: builder.query({
+        getProject: builder.query({
             query: (id) => `${PROJECTS_URL}/${id}`,
             async onQueryStarted(id, { dispatch, queryFulfilled }) {
                 try {
@@ -35,14 +42,20 @@ export const projectsApiSlice = apiSlice.injectEndpoints({
             },
             providesTags: (result, error, id) => [{ type: 'Project', id }],
         }),
-        createProject: builder.mutation({
-            query: (data) => ({
-                url: PROJECTS_URL,
-                method: "POST",
+        updateProject: builder.mutation({
+            query: ({ id, ...data }) => ({
+                url: `${PROJECTS_URL}/${id}`,
+                method: "PUT",
                 body: data,
+            }),
+        }),
+        deleteProject: builder.mutation({
+            query: (id) => ({
+                url: `${PROJECTS_URL}/${id}`,
+                method: "DELETE",
             }),
         }),
     }),
 })
 
-export const { useFetchProjectsQuery, useFetchProjectByIdQuery, useCreateProjectMutation } = projectsApiSlice;
+export const { useCreateProjectMutation, useGetAllProjectsQuery, useGetProjectQuery, useUpdateProjectMutation, useDeleteProjectMutation } = projectsApiSlice;
