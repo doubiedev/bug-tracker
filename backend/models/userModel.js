@@ -20,6 +20,7 @@ const userSchema = mongoose.Schema(
             type: String,
             enum: ['admin', 'developer', 'project-manager', 'submitter'],
             required: true,
+            default: 'submitter'
         },
         profilePicture: {
             type: String,

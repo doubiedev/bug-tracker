@@ -70,7 +70,7 @@ const LoginScreen = () => {
 
                 <Row className='py-3'>
                     <Col>
-                        New Customer? <Link to='/register'>Register</Link>
+                        Don't have an account yet? <Link to='/register'>Register</Link>
                     </Col>
                 </Row>
             </Form>

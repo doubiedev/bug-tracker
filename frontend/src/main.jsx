@@ -16,16 +16,20 @@ import HomeScreen from './screens/HomeScreen.jsx';
 import LoginScreen from './screens/LoginScreen.jsx';
 import RegisterScreen from './screens/RegisterScreen.jsx';
 import ProfileScreen from './screens/ProfileScreen.jsx';
+import ProjectsScreen from './screens/ProjectsScreen.jsx';
+import TeamsScreen from './screens/TeamsScreen.jsx';
 
 const router = createBrowserRouter(
     createRoutesFromElements(
         <Route path='/' element={<App />}>
-            <Route index={true} path='/' element={<HomeScreen />} />
             <Route path='/login' element={<LoginScreen />} />
             <Route path='/register' element={<RegisterScreen />} />
             {/* Private Routes */}
             <Route path='' element={<PrivateRoute />}>
+                <Route index={true} path='/' element={<HomeScreen />} />
                 <Route path='/profile' element={<ProfileScreen />} />
+                <Route path='/projects' element={<ProjectsScreen />} />
+                <Route path='/teams' element={<TeamsScreen />} />
             </Route>
         </Route>
     )

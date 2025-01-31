@@ -22,7 +22,7 @@ const ProfileScreen = () => {
     useEffect(() => {
         setName(userInfo.name);
         setEmail(userInfo.email);
-    }, [userInfo.setName, userInfo.setEmail]);
+    }, [userInfo.setName, userInfo.setEmail, userInfo.name, userInfo.email]);
 
     const submitHandler = async (e) => {
         e.preventDefault();

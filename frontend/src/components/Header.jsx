@@ -1,4 +1,4 @@
-import { Navbar, Nav, Container, NavDropdown, Badge } from 'react-bootstrap';
+import { Navbar, Nav, Container, NavDropdown, NavLink } from 'react-bootstrap';
 import { FaSignInAlt, FaSignOutAlt } from 'react-icons/fa';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -29,10 +29,27 @@ const Header = () => {
             <Navbar bg='dark' variant='dark' expand='lg' collapseOnSelect>
                 <Container>
                     <LinkContainer to='/'>
-                        <Navbar.Brand>MERN Auth</Navbar.Brand>
+                        <Navbar.Brand>Bug Tracker</Navbar.Brand>
                     </LinkContainer>
                     <Navbar.Toggle aria-controls='basic-navbar-nav' />
                     <Navbar.Collapse id='basic-navbar-nav'>
+                        <Nav className='me-auto'>
+                            <LinkContainer to='/'>
+                                <NavLink>
+                                    Dashboard
+                                </NavLink>
+                            </LinkContainer>
+                            <LinkContainer to='/projects'>
+                                <NavLink>
+                                    Projects
+                                </NavLink>
+                            </LinkContainer>
+                            <LinkContainer to='/teams'>
+                                <NavLink>
+                                    Teams
+                                </NavLink>
+                            </LinkContainer>
+                        </Nav>
                         <Nav className='ms-auto'>
                             {userInfo ? (
                                 <>
