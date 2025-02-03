@@ -44,11 +44,6 @@ const Header = () => {
                                     Projects
                                 </NavLink>
                             </LinkContainer>
-                            <LinkContainer to='/teams'>
-                                <NavLink>
-                                    Teams
-                                </NavLink>
-                            </LinkContainer>
                         </Nav>
                         <Nav className='ms-auto'>
                             {userInfo ? (

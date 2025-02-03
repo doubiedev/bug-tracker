@@ -42,6 +42,9 @@ const ProjectsScreen = () => {
     return (
         <div className="container">
             <h2 className="mb-4">Projects</h2>
+            <Button variant="primary" onClick={() => navigate("/projects/create")}>
+                Create New Project
+            </Button>
             {isLoading ? (
                 <p>Loading...</p>
             ) : error ? (
@@ -63,28 +66,18 @@ const ProjectsScreen = () => {
                                 <td>{truncateText(project.description)}</td>
                                 <td>{project.createdBy?.name || "Unknown"}</td>
                                 <td>
-                                    <Dropdown>
-                                        <Dropdown.Toggle variant="secondary" size="sm">
-                                            Actions
-                                        </Dropdown.Toggle>
-                                        <Dropdown.Menu>
-                                            <Dropdown.Item onClick={() => handleEdit(project._id)}>
-                                                Edit
-                                            </Dropdown.Item>
-                                            <Dropdown.Item onClick={() => handleDelete(project._id)}>
-                                                Delete
-                                            </Dropdown.Item>
-                                        </Dropdown.Menu>
-                                    </Dropdown>
+                                    <Button variant="secondary" size="sm" onClick={() => handleEdit(project._id)}>
+                                        Edit
+                                    </Button>
+                                    <Button variant="danger" size="sm" onClick={() => handleDelete(project._id)}>
+                                        Delete
+                                    </Button>
                                 </td>
                             </tr>
                         ))}
                     </tbody>
                 </Table>
             )}
-            <Button variant="primary" onClick={() => navigate("/projects/create")}>
-                Create New Project
-            </Button>
         </div>
     );
 };
